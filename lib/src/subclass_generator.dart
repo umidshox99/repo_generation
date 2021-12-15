@@ -32,7 +32,7 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
       String parameters = "{";
       String parametersApi = '';
       visitor.methods[methodName]?.values.first.forEach((key, value) {
-        parameters += "required ${value} ${key}";
+        parameters += "required ${value} ${key}, ";
         parametersApi += "${key}, ";
       });
       if(parameters.length == 1){
