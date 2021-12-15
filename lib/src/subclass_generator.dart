@@ -21,7 +21,7 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
     var classBuffer = StringBuffer();
 
     // class *Model*Impl
-    classBuffer.writeln("class $className extends ${visitor.className} {");
+    classBuffer.writeln("class $className with ${visitor.className} {");
 
     classBuffer.writeln("final ApiClient _apiClient;");
     classBuffer.writeln("${className}(this._apiClient);");
