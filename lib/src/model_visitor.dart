@@ -2,7 +2,7 @@ import 'package:analyzer/dart/element/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 class ModelVisitor extends SimpleElementVisitor {
-  String className = "";
+  String className = "RemoteDataSource";
 
   Map<String, dynamic> fields = {};
   Map<String, Map<dynamic, Map<String, dynamic>>> methods = {};
@@ -10,7 +10,6 @@ class ModelVisitor extends SimpleElementVisitor {
   @override
   visitConstructorElement(ConstructorElement element) {
     final elementReturnType = element.type.returnType.toString();
-
     className = elementReturnType.replaceFirst('*', '');
   }
 
