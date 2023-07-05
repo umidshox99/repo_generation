@@ -13,7 +13,7 @@ dependencies:
   source_gen:
   repo_annotation:
     git:
-      url: https://github.com/alphaSoft99/repo_annotation.git
+      url: https://github.com/umidshox99/repo_annotation.git
 
 dev_dependencies:
   build_test:
