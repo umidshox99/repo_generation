@@ -51,13 +51,13 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
       classBuffer.writeln("try{");
       classBuffer.writeln(
           "response = await _apiClient.${methodName}(${parametersApi});");
+      classBuffer.writeln('return ResponseHandler()..data = response;');
       classBuffer.writeln("} catch(error, stacktrace) {");
       classBuffer.writeln(
           'debugPrint("Exception occurred: \$error stacktrace: \$stacktrace");');
       classBuffer.writeln(
           'return ResponseHandler()..setException(ServerError.withError(error: error as DioException),);');
       classBuffer.writeln('}');
-      classBuffer.writeln('return ResponseHandler()..data = response;');
       classBuffer.writeln('}');
     }
 
