@@ -67,7 +67,7 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
 
     classBuffer.writeln("}");
 
-    print("UMIDJON GENERATED ${classBuffer.toString()}");
+    // print("UMIDJON GENERATED ${classBuffer.toString()}");
     return classBuffer.toString();
   }
 }

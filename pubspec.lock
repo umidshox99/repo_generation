@@ -364,9 +364,11 @@ packages:
   repo_annotation:
     dependency: "direct main"
     description:
-      path: "../repo_annotation"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "05a9f4f5405a2a528a7065fde0c72f42d7ae8a77"
+      url: "https://github.com/umidshox99/repo_annotation.git"
+    source: git
     version: "0.0.2"
   shelf:
     dependency: transitive
