@@ -7,8 +7,8 @@ import 'model_visitor.dart';
 
 class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
   @override
-  generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) {
+  generateForAnnotatedElement(Element element, ConstantReader annotation,
+      BuildStep buildStep) {
     return _generatedSource(element);
   }
 
@@ -45,9 +45,11 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
       }
       classBuffer.writeln("@override");
       classBuffer.writeln(
-          "${visitor.methods[methodName]?.keys.first} ${methodName} (${parameters}) async {");
+          "${visitor.methods[methodName]?.keys
+              .first} ${methodName} (${parameters}) async {");
       classBuffer.writeln(
-          "${visitor.methods[methodName]?.keys.first.toString().replaceAll('Future<ResponseHandler<', '').replaceAll('>>', '')}? response;");
+          "${visitor.methods[methodName]?.keys.first.toString().replaceAll(
+              'Future<ResponseHandler<', '').replaceAll('>>', '')}? response;");
       classBuffer.writeln("try{");
       classBuffer.writeln(
           "response = await _apiClient.${methodName}(${parametersApi});");
@@ -62,8 +64,10 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
     }
 
     // class ends here
+
     classBuffer.writeln("}");
 
+    print("UMIDJON GENERATED ${classBuffer.toString()}");
     return classBuffer.toString();
   }
 }
