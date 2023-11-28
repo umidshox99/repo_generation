@@ -15,9 +15,9 @@ dependencies:
   repo_annotation:
     git:
       url: https://github.com/umidshox99/repo_annotation.git
-#  meta: ^1.7.0
   source_gen: ^1.2.2
   strings: ^0.2.1
+  meta: ^1.11.0
 
 dev_dependencies:
   build_test:
