@@ -47,7 +47,7 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
       classBuffer.writeln(
           "${visitor.methods[methodName]?.keys.first} ${methodName} (${parameters}) async {");
       classBuffer.writeln(
-          "${replaceLastOccurrence(visitor.methods[methodName]?.keys.first.toString().replaceAll('Future<ResponseHandler<', '') ?? "", ">>", "").replaceAll('>>', '')} response;");
+          "${removeLastSymbol(visitor.methods[methodName]?.keys.first.toString().replaceAll('Future<ResponseHandler<', '') ?? "")} response;");
       classBuffer.writeln("try{");
       classBuffer.writeln(
           "response = await _apiClient.${methodName}(${parametersApi});");
@@ -69,18 +69,13 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
     return classBuffer.toString();
   }
 
-  String replaceLastOccurrence(
-      String original, String toReplace, String replacement) {
-    int lastIndex = original.lastIndexOf(toReplace);
-
-    if (lastIndex == -1) {
-      return original; // Substring not found, return the original string
+  String removeLastSymbol(String s) {
+    if (s.contains(">>>>")) {
+      s = s.replaceAll(">>>>", ">>");
+    } else if (s.contains(">>")) {
+      s = s.replaceAll(">>", "");
     }
-
-    String beforeLastOccurrence = original.substring(0, lastIndex);
-    String afterLastOccurrence =
-        original.substring(lastIndex + toReplace.length);
-
-    return beforeLastOccurrence + replacement + afterLastOccurrence;
+    return s;
   }
+
 }
