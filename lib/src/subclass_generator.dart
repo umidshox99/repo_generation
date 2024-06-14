@@ -75,6 +75,7 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
     } else if (s.contains(">>")) {
       s = s.replaceAll(">>", "");
     }
+    if(s!="dynamic") s=s+"?";
     return s;
   }
 
