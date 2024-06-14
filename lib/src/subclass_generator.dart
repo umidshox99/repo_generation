@@ -7,8 +7,8 @@ import 'model_visitor.dart';
 
 class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
   @override
-  generateForAnnotatedElement(Element element, ConstantReader annotation,
-      BuildStep buildStep) {
+  generateForAnnotatedElement(
+      Element element, ConstantReader annotation, BuildStep buildStep) {
     return _generatedSource(element);
   }
 
@@ -45,11 +45,9 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
       }
       classBuffer.writeln("@override");
       classBuffer.writeln(
-          "${visitor.methods[methodName]?.keys
-              .first} ${methodName} (${parameters}) async {");
+          "${visitor.methods[methodName]?.keys.first} ${methodName} (${parameters}) async {");
       classBuffer.writeln(
-          "${visitor.methods[methodName]?.keys.first.toString().replaceAll(
-              'Future<ResponseHandler<', '').replaceAll('>>', '')}? response;");
+          "${replaceLastOccurrence(visitor.methods[methodName]?.keys.first.toString().replaceAll('Future<ResponseHandler<', '') ?? "", ">>", "").replaceAll('>>', '')} response;");
       classBuffer.writeln("try{");
       classBuffer.writeln(
           "response = await _apiClient.${methodName}(${parametersApi});");
@@ -69,5 +67,20 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
 
     // print("UMIDJON GENERATED ${classBuffer.toString()}");
     return classBuffer.toString();
+  }
+
+  String replaceLastOccurrence(
+      String original, String toReplace, String replacement) {
+    int lastIndex = original.lastIndexOf(toReplace);
+
+    if (lastIndex == -1) {
+      return original; // Substring not found, return the original string
+    }
+
+    String beforeLastOccurrence = original.substring(0, lastIndex);
+    String afterLastOccurrence =
+        original.substring(lastIndex + toReplace.length);
+
+    return beforeLastOccurrence + replacement + afterLastOccurrence;
   }
 }
