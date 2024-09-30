@@ -9,54 +9,70 @@ class ExtensionGenerator extends GeneratorForAnnotation<ExtensionAnnotation> {
   @override
   generateForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) {
-    return _generatedSource(element);
+    return _generateSource(element);
   }
 
-  String _generatedSource(Element element) {
-    var visitor = ModelVisitor();
+  String _generateSource(Element element) {
+    final visitor = ModelVisitor();
 
-    element.visitChildren(visitor);
+    // Debugging line to see the element type
+    print(
+        "Generating source for element: ${element.displayName} of type: ${element.runtimeType}");
 
-    var classBuffer = StringBuffer();
-
-    // Map 'variables'
-    classBuffer.writeln("extension vars on ${visitor.className} {");
-
-    classBuffer.writeln("Map<String, dynamic> get variables =>");
-
-    classBuffer.writeln("{");
-
-    // assign variables to Map
-    for (var field in visitor.fields.keys) {
-      var variable =
-      field.startsWith('_') ? field.replaceFirst('_', '') : field;
-
-      classBuffer.writeln("'$variable': $field,");
+    // Check if the element is a class or a mixin
+    if (element is ClassElement) {
+      element.accept(visitor);
+      print("Class name captured: ${visitor.className}"); // Debugging line
+    } else if (element is MixinElement) {
+      element.accept(visitor);
+      print("Mixin name captured: ${visitor.className}"); // Debugging line
+    } else {
+      throw Exception('Element is not a class or mixin');
     }
 
-    classBuffer.writeln("};");
+    // Construct the class or mixin implementation
+    final className =
+        "${visitor.className}Impl"; // Append "Impl" to the class/mixin name
+    final classBuffer = StringBuffer();
 
-    classBuffer.writeln("}");
+    // Generate the implementation
+    classBuffer.writeln("class $className with ${visitor.className} {");
+    classBuffer.writeln("final ApiClient _apiClient;");
+    classBuffer.writeln("$className(this._apiClient);");
+    classBuffer.writeln('');
 
-    // getters and setters
-    for (var field in visitor.fields.keys) {
-      var variable =
-      field.startsWith('_') ? field.replaceFirst('_', '') : field;
+    // Generate methods
+    visitor.methods.forEach((methodName, returnTypeAndParams) {
+      final returnType = returnTypeAndParams.keys.first;
+      Map<String, dynamic> params = returnTypeAndParams.values.first;
 
-      // extension *variable*Var
-      classBuffer.writeln("extension ${variable}Var on ${visitor.className} {");
+      final parameterString = _generateParameterString(params);
+      final apiCallArguments = params.keys.join(", ");
 
-      // getter
+      classBuffer.writeln("@override");
+      classBuffer.writeln("$returnType $methodName($parameterString) async {");
+      classBuffer.writeln("try {");
       classBuffer.writeln(
-          "${visitor.fields[field]} get $variable => variables['$variable'];");
-
-      // setter
+          "final response = await _apiClient.$methodName($apiCallArguments);");
+      classBuffer.writeln("return ResponseHandler()..data = response;");
+      classBuffer.writeln("} catch (error, stacktrace) {");
       classBuffer.writeln(
-          "set $variable(${visitor.fields[field]} $variable) => $field = $variable;");
-
+          'debugPrint("Exception occurred: \$error stacktrace: \$stacktrace");');
+      classBuffer.writeln(
+          'return ResponseHandler()..setException(ServerError.withError(error: error as DioException));');
       classBuffer.writeln("}");
-    }
+      classBuffer.writeln("}");
+      classBuffer.writeln(''); // Add a new line for better readability
+    });
 
-    return "/*" + classBuffer.toString() + "*/";
+    classBuffer.writeln("}"); // Close the class definition
+
+    return classBuffer.toString();
+  }
+
+  String _generateParameterString(Map<String, dynamic> params) {
+    return params.entries
+        .map((entry) => "required ${entry.value} ${entry.key}")
+        .join(", ");
   }
 }
