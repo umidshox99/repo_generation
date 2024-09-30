@@ -12,7 +12,6 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-
     return _generatedSource(element);
   }
 
@@ -20,14 +19,18 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
     final visitor = ModelVisitor();
 
     // Debugging line to see the element type
-    print("Generating source for element: ${element.displayName} of type: ${element.runtimeType}");
+    print(
+        "Generating source for element: ${element.displayName} of type: ${element.runtimeType}");
 
-    // Check if the element is a class
+    // Check if the element is a class or a mixin
     if (element is ClassElement) {
       element.accept(visitor);
       print("Class name captured: ${visitor.className}"); // Debugging line
+    } else if (element is MixinElement) {
+      element.accept(visitor);
+      print("Mixin name captured: ${visitor.className}"); // Debugging line
     } else {
-      throw Exception('Element is not a class');
+      throw Exception('Element is not a class or mixin');
     }
 
     final className = "${visitor.className}Impl";
