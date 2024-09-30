@@ -17,12 +17,20 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
   }
 
   String _generatedSource(Element element) {
-    var visitor = ModelVisitor();
+    final visitor = ModelVisitor();
 
-    element.visitChildren(visitor);
+    // Debugging line to see the element type
+    print("Generating source for element: ${element.displayName} of type: ${element.runtimeType}");
 
-    var className = "${visitor.className}Impl";
+    // Check if the element is a class
+    if (element is ClassElement) {
+      element.accept(visitor);
+      print("Class name captured: ${visitor.className}"); // Debugging line
+    } else {
+      throw Exception('Element is not a class');
+    }
 
+    final className = "${visitor.className}Impl";
     var classBuffer = StringBuffer();
 
     // class *Model*Impl

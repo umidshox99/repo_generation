@@ -18,9 +18,10 @@ class ModelVisitor extends SimpleElementVisitor {
   }
 
   @override
-  visitConstructorElement(ConstructorElement element) {
-    final elementReturnType = element.type.returnType.toString();
-    className = elementReturnType.replaceFirst('*', '');
+  void visitConstructorElement(ConstructorElement element) {
+    // This might not be necessary if you handle class names in visitClassElement
+    // Comment this out if class name is already handled properly
+    // className = element.returnType.getDisplayString(withNullability: true).replaceFirst('*', '');
   }
 
   @override
