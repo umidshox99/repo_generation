@@ -8,7 +8,11 @@ import 'model_visitor.dart';
 class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
   @override
   generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) {
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) {
+
     return _generatedSource(element);
   }
 
@@ -75,8 +79,7 @@ class SubclassGenerator extends GeneratorForAnnotation<SubclassAnnotation> {
     } else if (s.contains(">>")) {
       s = s.replaceAll(">>", "");
     }
-    if(s!="dynamic") s=s+"?";
+    if (s != "dynamic") s = s + "?";
     return s;
   }
-
 }

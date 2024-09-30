@@ -2,10 +2,20 @@ import 'package:analyzer/dart/element/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 
 class ModelVisitor extends SimpleElementVisitor {
-  String className = "RemoteDataSource";
+  String className = "";
 
   Map<String, dynamic> fields = {};
   Map<String, Map<dynamic, Map<String, dynamic>>> methods = {};
+  @override
+  void visitClassElement(ClassElement element) {
+    // Read the class name directly from the ClassElement
+    className = element.name;
+    // You can also print or log the class name here if needed
+    print("Visiting class: $className");
+
+    // Visit any members of the class
+    element.visitChildren(this);
+  }
 
   @override
   visitConstructorElement(ConstructorElement element) {
